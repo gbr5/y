@@ -19,10 +19,15 @@ export async function GET(request: NextRequest) {
     })
     if (!error) {
 
-      // error 403: Emaill link is invalid or has expired
-      // console.log(error)
       // redirect user to specified redirect URL or root of app
       redirect(next)
+    }
+    // error 403: Emaill link is invalid or has expired
+    // console.log("confirm error: ", error)
+    if (error.code === "otp_expired") {
+      // send user a new otp to user e-mail
+      // send user to login page with params - otp expired
+      // login page should show message that a new otp has been sent
     }
   }
 
