@@ -7,6 +7,13 @@ import { useEffect, useState } from 'react'
 import { redirect } from 'next/navigation'
 import { toast, Toaster } from 'sonner'
 import { createClient } from '@/utils/supabase/client'
+import { validateEmail } from '@/utils/validateEmail'
+
+const errorCodes = [
+  "invalid_credentials",
+  "email_not_confirmed",
+  "invalid_email"
+]
 
 export default function LoginPage() {
   const supabase = createClient()
@@ -37,16 +44,19 @@ export default function LoginPage() {
     e.preventDefault()
 
     const formData = new FormData(e.currentTarget)
+    const isEmailValid = validateEmail(formData.get("email") as string)
+
+    if (!isEmailValid) {
+      setIsLoading(false)
+      setErrorMessage("Enter a valid e-mail!")
+      return toast.error("Enter a valid e-mail!")
+    }
 
     const { isSuccessful, message, errorCode } = await login(formData)
 
     if (!isSuccessful) {
-      if (errorCode == "invalid_credentials") {
-        setIsLoading(false)
-        setErrorMessage(message)
-        return toast.error(message)
-      }
-      if (errorCode == "email_not_confirmed") {
+      if (errorCode && errorCodes.includes(errorCode)) {
+      // if (errorCode == "invalid_credentials" || errorCode == "email_not_confirmed" || errorCode == "invalid_email") {
         setIsLoading(false)
         setErrorMessage(message)
         return toast.error(message)
@@ -80,7 +90,6 @@ export default function LoginPage() {
         <div className="flex flex-col justify-center items-start w-full">
           <label className='text-left' htmlFor="email">Email:</label>
           <Input className='text-black' id="email" name="email" type="email" required />
-          {/* <input id="email" name="email" type="email" required /> */}
         </div>
         <div className="flex flex-col justify-center items-start w-full">
           <label className='text-left' htmlFor="password">Password:</label>

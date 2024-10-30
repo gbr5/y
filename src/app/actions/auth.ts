@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/utils/supabase/server'
 import { sanitizeUsername } from '@/utils/validateUsername'
+import { validateEmail } from '@/utils/validateEmail'
 
 type AuthResponse = {
   isSuccessful: boolean;
@@ -14,12 +15,21 @@ type AuthResponse = {
 export async function login(formData: FormData): Promise<AuthResponse> {
   try {
     const supabase = await createClient()
+    const email = formData.get('email') as string
+    const isEmailValid = validateEmail(email)
 
+    if (!isEmailValid) {
+      return {
+        isSuccessful: false,
+        message: "Enter a valid e-mail",
+        errorCode: "invalid_email"
+      }
+    }
     // type-casting here for convenience
     // in practice, you should validate your inputs
     // make a validate e-mail function
     const data = {
-      email: formData.get('email') as string,
+      email: email,
       password: formData.get('password') as string,
     }
   
@@ -30,7 +40,7 @@ export async function login(formData: FormData): Promise<AuthResponse> {
       if (error.code === "invalid_credentials") {
         return {
           isSuccessful: false,
-          message: "Invalid e-mail and/or password.",
+          message: "Invalid e-mail, password combination",
           errorCode: error.code
         }
       }
@@ -39,7 +49,7 @@ export async function login(formData: FormData): Promise<AuthResponse> {
       if (error.code === "email_not_confirmed") {
         return {
           isSuccessful: false,
-          message: "You haven't confirmed your e-mail yet.",
+          message: "You haven't confirmed your e-mail yet",
           errorCode: error.code
         }
       }
@@ -61,7 +71,7 @@ export async function login(formData: FormData): Promise<AuthResponse> {
 
     return {
       isSuccessful: false,
-      message: "An unexpected error occured during signin.",
+      message: "An unexpected error occured during signin",
       errorCode: "UNKNOWN_ERROR"
     }
   }
@@ -80,16 +90,16 @@ export async function signup(formData: FormData): Promise<AuthResponse> {
     if (!username || !email || !password) {
       return {
         isSuccessful: false,
-        message: "Fields username, email, and password are required.",
+        message: "Fields username, email, and password are required",
         errorCode: "MISSING_FIELDS"
       }
     }
     // esse check pode ser feito pelo yup
 // Check if username has more than 3 characters
-    if (username.length < 3) {
+    if (username.length < 3 && username.length > 20) {
       return {
         isSuccessful: false,
-        message: "Username must be greater than 3!",
+        message: "Username must have between 3 and 20 characters",
         errorCode: "SHORT_USERNAME"
       }
     }
@@ -98,7 +108,7 @@ export async function signup(formData: FormData): Promise<AuthResponse> {
     if (!isUsernameUnique) {
       return {
         isSuccessful: false,
-        message: "This username is already registered.",
+        message: "This username is already registered",
         errorCode: "USERNAME_EXISTS"
       }
     }
@@ -121,7 +131,7 @@ export async function signup(formData: FormData): Promise<AuthResponse> {
         if (error.code === "user_already_exists") {
           return {
             isSuccessful: false,
-            message: "This e-mail is already registered.",
+            message: "This e-mail is already registered",
             errorCode: error.code
           }
         }
@@ -151,7 +161,7 @@ export async function signup(formData: FormData): Promise<AuthResponse> {
 
     return {
       isSuccessful: false,
-      message: "An unexpected error occured during signup.",
+      message: "An unexpected error occured during signup",
       errorCode: "UNKNOWN_ERROR"
     }
   }

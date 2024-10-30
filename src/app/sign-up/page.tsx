@@ -7,6 +7,7 @@ import { sanitizeUsername, isUsernameValid } from '@/utils/validateUsername'
 import { toast, Toaster } from 'sonner'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
+import { validateEmail } from '@/utils/validateEmail'
 // import HCaptcha from '@hcaptcha/react-hcaptcha'
 
 export default function SignUpPage() {
@@ -77,12 +78,16 @@ export default function SignUpPage() {
     const uniqueUsername = await checkIsUsernameUnique(formData.get("username") as string)
 
     if (!uniqueUsername) {
-      return setUsernameError("This username is already in use, please choose another one!")
+      return setUsernameError("This username is already in use, please choose another one")
     }
     const validUsername = isUsernameValid(formData.get("username") as string)
+    const validEmail = validateEmail(formData.get("username") as string)
     
     if (!validUsername) {
-      return setUsernameError("This username is already in use, please choose another one!")
+      return setUsernameError("Username must be an alphanumeric sequence between 3 and 20 characters")
+    }
+    if (!validEmail) {
+      return setEmailError("Enter a valid e-mail")
     }
     // formData.append("captchaToken", captchaToken)
     const { isSuccessful, message, errorCode} = await signup(formData)
@@ -99,8 +104,8 @@ export default function SignUpPage() {
         return toast.error(message)
       }
       setIsLoading(false)
-      setServerError("An unexpected error occurred, try again in a few moments.")
-      return toast.error("An unexpected error occurred, try again in a few moments.")
+      setServerError("An unexpected error occurred, try again in a few moments")
+      return toast.error("An unexpected error occurred, try again in a few moments")
     }
     // if (captcha.current) captcha.current.resetCaptcha()
     toast.success(message)
