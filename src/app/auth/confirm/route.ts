@@ -18,6 +18,9 @@ export async function GET(request: NextRequest) {
       token_hash,
     })
     if (!error) {
+
+      // error 403: Emaill link is invalid or has expired
+      // console.log(error)
       // redirect user to specified redirect URL or root of app
       redirect(next)
     }
