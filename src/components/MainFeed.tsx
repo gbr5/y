@@ -1,26 +1,27 @@
-import Post from "./Post";
-import ComposePost from "./server-components/compose-post";
 import { getAllPosts } from "@/app/actions/post";
+import ComposePost from "./server-components/compose-post";
+import PostFeed from "./PostFeed";
+import { Suspense } from "react";
+import PostFeedSkeleton from "./PostFeedSkeleton";
 
 export default async function MainFeed() {
-  const posts = await getAllPosts()
-  console.log("posts: ", posts)
+  const posts = getAllPosts()
+
   return (
     // min-w-[100vw]
     // max-w-[100vw]
     // lg:max-w-[600px]
     // lg:min-w-[600px]
     <main className="
-
       flex
       flex-col
       mx-auto
       h-full
-      w-auto
-
-      sm:max-w-[600px]
+      w-fit
+      md:max-w-[600px]
+      md:min-w-[600px]
       lg:max-w-[600px]
-
+      lg:min-w-[600px]
       border-r-[0.5px]
       border-l-[0.5px]
       border-gray-600
@@ -44,12 +45,10 @@ export default async function MainFeed() {
         <div className="flex-none w-10 h-10 bg-slate-400 rounded-full"></div>
         <ComposePost />
       </div>
-      <div className="flex flex-col w-full">
-        {!posts && <div>Something went wrong ...</div>}
-        {posts && posts.map((item, index) => (
-          <Post key={index} post={item} />
-        ))}
-      </div>
+      
+      <Suspense fallback={<PostFeedSkeleton />}>
+        <PostFeed postsPromise={posts} />
+      </Suspense>
     </main>
   )
 }

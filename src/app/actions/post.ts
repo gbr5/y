@@ -146,10 +146,5 @@ export async function getAllPosts(): Promise<TPost[] | null> {
   } catch (error) {
     console.error("Unknown error - submitPost function: ", error)
     return null
-    // return {
-    //   isSuccessful: false,
-    //   message: "An unexpected error occured when getting posts",
-    //   errorCode: "UNKNOWN_ERROR"
-    // }
   }
 }

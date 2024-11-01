@@ -34,7 +34,7 @@ export default function Post({ post }: Props) {
         pl-4
       "
     >
-      <div className="flex min-w-10 h-10 bg-slate-200 rounded-full" />
+      <div className="flex min-w-10 h-10 bg-slate-200 rounded-full pr-6" />
       <div className="flex flex-col w-full">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center space-x-1">
@@ -45,7 +45,7 @@ export default function Post({ post }: Props) {
           </div>
           <div className="text-gray-500 "><BsThreeDots /></div>
         </div>
-        <p className="text-sm text-white">{post.text}</p>
+        <p className="text-sm text-white leading-5">{post.text}</p>
         <div className="bg-slate-400 aspect-square w-full h-96 rounded-xl">
 
         </div>
