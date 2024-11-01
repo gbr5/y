@@ -1,6 +1,6 @@
 "use client"
 import { getAllPosts, TPost } from "@/app/actions/post";
-import ComposePost from "./server-components/compose-post";
+import ComposePost from "./ComposePost";
 import PostFeed from "./PostFeed";
 import { Suspense, useEffect, useState } from "react";
 import PostFeedSkeleton from "./PostFeedSkeleton";

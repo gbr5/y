@@ -103,7 +103,6 @@ export async function submitPost(formData: FormData): Promise<ServerResponse> {
       errorCode: "UNKNOWN_ERROR"
     }
   }
-
 }
 
 type TProfile = {
@@ -146,5 +145,43 @@ export async function getAllPosts(): Promise<TPost[] | null> {
   } catch (error) {
     console.error("Unknown error - submitPost function: ", error)
     return null
+  }
+}
+
+export async function likePost(post_id: string): Promise<ServerResponse> {
+  try {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase.auth.getUser()
+
+    if (!data || !data.user || error) await handleNoUser(data, error)
+
+    const response = await supabase.from("likes").insert({
+      id: randomUUID(),
+      user_id: data.user?.id || "",
+      tweet_id: post_id,
+    })
+
+    if (response.error) {
+      console.log("Post like insertion error - likePost function: ", response.error)
+      return {
+        isSuccessful: false,
+        message: "An unexpected error occured",
+        errorCode: "UNKNOWN_ERROR"
+      }
+    }
+    return {
+      isSuccessful: true,
+      message: "like"
+    }
+    
+  } catch (error) {
+    console.error("Unknown error - likePost function: ", error)
+
+    return {
+      isSuccessful: false,
+      message: "An unexpected error occured when liking a post",
+      errorCode: "UNKNOWN_ERROR"
+    }
   }
 }
