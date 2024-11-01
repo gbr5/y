@@ -68,7 +68,7 @@ export default function LoginPage() {
     toast.success(message)
     setTimeout(() => {
       redirect("/")
-    }, 5000)
+    }, 2000)
   }
   return (
     <div className="
