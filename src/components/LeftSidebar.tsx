@@ -41,8 +41,19 @@ const NAVIGATION_ITEMS = [
 
 export default function LeftSidebar() {
   return (
-    <section className="sticky top-0  flex flex-col max-w-24 lg:max-w-[275px]  items-stretch min-h-screen h-[100vh]">
-      {/* <div className=""> */}
+    <section className="
+      sticky
+      top-0
+      
+      flex
+      flex-col
+      max-w-14
+      lg:max-w-[275px]
+      
+      items-stretch
+      min-h-screen
+      h-[100vh]
+    ">
       <div className="flex flex-col items-stretch h-full space-y-4 my-4">
         {NAVIGATION_ITEMS.map((item, index) => (
           <Link
@@ -71,14 +82,17 @@ export default function LeftSidebar() {
             {index !== 0 && <div className="hidden lg:flex">{item.title}</div>}
           </Link>
         ))}
+        {/* make a search button */}
         <button
           type="button"
           className="
             flex
             rounded-full
             bg-yprimary
-            py-4
-            m-4
+            py-2
+            m-2
+            lg:py-4
+            lg:m-4
             text-center
             items-center
             justify-center
@@ -110,7 +124,8 @@ export default function LeftSidebar() {
           bg-transparent
           p-2
           lg:p-4
-          m-4
+          m-2
+          lg:m-4
           text-center
           hover:bg-white/30
           transition
@@ -118,7 +133,7 @@ export default function LeftSidebar() {
         "
       >
         <div className="flex items-center space-x-0 lg:space-x-2">
-          <div className="rounded-full bg-slate-400 w-12 h-12"></div>
+          <div className="rounded-full bg-slate-400 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"></div>
           <div className="hidden lg:flex flex-col justify-start items-start text-sm">
             <div className="font-semibold">DIFOs</div>
             <div className="">@difos21797298</div>

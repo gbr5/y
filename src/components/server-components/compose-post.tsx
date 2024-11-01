@@ -1,5 +1,5 @@
 "use client"
-import { toast } from "sonner"
+import { toast, Toaster } from "sonner"
 import { submitPost } from "@/app/actions/post"
 import { useState } from "react"
 import { redirect } from "next/navigation"
@@ -32,7 +32,13 @@ export default function ComposePost({ onPostSuccess }: Props) {
     }
   }
   return (
-    <form action={handleSubmitPost} className="flex flex-col w-full h-full ">
+    <form action={handleSubmitPost} className="flex flex-col w-full h-full relative">
+      <Toaster className="
+          fixed
+          top-0
+          my-12
+          shadow-2xl
+        " />
       <input
         type="text"
         name="post"

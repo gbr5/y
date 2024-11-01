@@ -46,7 +46,7 @@ export default function Post({ post }: Props) {
           <div className="text-gray-500 "><BsThreeDots /></div>
         </div>
         <p className="text-sm text-white leading-5 my-4">{post.text}</p>
-        <div className="bg-slate-400 aspect-square w-full h-96 rounded-xl">
+        <div className="bg-slate-400 aspect-square w-full h-fit md:h-96 rounded-xl">
 
         </div>
         <div className="flex items-center space-x-2 w-full justify-between mt-2">
