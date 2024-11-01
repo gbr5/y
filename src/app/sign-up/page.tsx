@@ -128,9 +128,9 @@ export default function SignUpPage() {
     ">
       <Toaster
         className="
-          absolute
-          top-0
-          my-12
+          lg:absolute
+          lg:top-0
+          lg:my-12
           shadow-2xl
         "
         dir="ltr"
