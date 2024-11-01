@@ -78,15 +78,18 @@ export default function SignUpPage() {
     const uniqueUsername = await checkIsUsernameUnique(formData.get("username") as string)
 
     if (!uniqueUsername) {
+      setIsLoading(false)
       return setUsernameError("This username is already in use, please choose another one")
     }
     const validUsername = isUsernameValid(formData.get("username") as string)
-    const validEmail = validateEmail(formData.get("username") as string)
+    const validEmail = validateEmail(formData.get("email") as string)
     
     if (!validUsername) {
+      setIsLoading(false)
       return setUsernameError("Username must be an alphanumeric sequence between 3 and 20 characters")
     }
     if (!validEmail) {
+      setIsLoading(false)
       return setEmailError("Enter a valid e-mail")
     }
     // formData.append("captchaToken", captchaToken)
@@ -111,7 +114,7 @@ export default function SignUpPage() {
     toast.success(message)
     setTimeout(() => {
       redirect("/")
-    }, 5000)
+    }, 2000)
     setIsLoading(false)
   }
 
