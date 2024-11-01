@@ -4,7 +4,11 @@ import { submitPost } from "@/app/actions/post"
 import { useState } from "react"
 import { redirect } from "next/navigation"
 
-export default function ComposePost() {
+type Props = {
+  onPostSuccess: () => void
+}
+
+export default function ComposePost({ onPostSuccess }: Props) {
   const [errorMessage, setErrorMessage] = useState("")
 
   async function handleSubmitPost(formData: FormData) {
@@ -22,6 +26,7 @@ export default function ComposePost() {
         redirect("/error")
       }
       toast.success(message)
+      onPostSuccess()
     } catch {
       redirect("/error")
     }

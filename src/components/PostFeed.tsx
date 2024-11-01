@@ -1,21 +1,19 @@
-"use client"
 import { TPost } from "@/app/actions/post";
-import { use } from "react";
 import Post from "./Post";
 import PostFeedSkeleton from "./PostFeedSkeleton";
+import { LoaderIcon } from "lucide-react";
 
 type Props = {
-  postsPromise: Promise<TPost[] | null>
+  posts: TPost[] | null
 }
 
-export default function PostFeed({ postsPromise }: Props) {
-  const posts = use(postsPromise)
+export default function PostFeed({ posts }: Props) {
 
   return (
     <div className="flex flex-col w-full">
       {!posts && (
-        <div className="w-full h-full">
-          <p>Something went wrong ...</p>
+        <div className="flex flex-col w-full h-full items-center">
+          <LoaderIcon className="my-4" />
           <PostFeedSkeleton />
         </div>
       )}

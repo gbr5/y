@@ -1,12 +1,27 @@
-import { getAllPosts } from "@/app/actions/post";
+"use client"
+import { getAllPosts, TPost } from "@/app/actions/post";
 import ComposePost from "./server-components/compose-post";
 import PostFeed from "./PostFeed";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import PostFeedSkeleton from "./PostFeedSkeleton";
 
-export default async function MainFeed() {
-  const posts = getAllPosts()
+export default function MainFeed() {
+  const [posts, setPosts] = useState<TPost[] | null>(null)
+  const [refresh, setRefresh] = useState(true)
 
+  useEffect(() => {
+    async function fetchPosts() {
+      const response = await getAllPosts()
+      setPosts(response)
+      setRefresh(false)
+    }
+
+    if (refresh) fetchPosts()
+  }, [refresh])
+
+  function handleNewPost() {
+    setRefresh(true)
+  }
   return (
     // min-w-[100vw]
     // max-w-[100vw]
@@ -43,11 +58,11 @@ export default async function MainFeed() {
         p-4
       ">
         <div className="flex-none w-10 h-10 bg-slate-400 rounded-full"></div>
-        <ComposePost />
+        <ComposePost onPostSuccess={handleNewPost} />
       </div>
       
       <Suspense fallback={<PostFeedSkeleton />}>
-        <PostFeed postsPromise={posts} />
+        <PostFeed posts={posts} />
       </Suspense>
     </main>
   )
