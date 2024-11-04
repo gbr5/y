@@ -5,20 +5,20 @@ import { LoaderIcon } from "lucide-react";
 
 type Props = {
   posts: TPost[] | null
+  userId: string
 }
 
-export default function PostFeed({ posts }: Props) {
-
+export default async function PostFeed({ posts, userId }: Props) {
   return (
     <div className="flex flex-col w-full">
       {!posts && (
         <div className="flex flex-col w-full h-full items-center">
-          <LoaderIcon className="my-4" />
+          <LoaderIcon className="my-4 animate-spin" />
           <PostFeedSkeleton />
         </div>
       )}
       {posts && posts.map((item, index) => (
-        <Post key={index} post={item} />
+        <Post key={index} post={item} userId={userId} />
       ))}
     </div>
   )

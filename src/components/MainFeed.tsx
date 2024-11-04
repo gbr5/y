@@ -5,7 +5,11 @@ import PostFeed from "./PostFeed";
 import { Suspense, useEffect, useState } from "react";
 import PostFeedSkeleton from "./PostFeedSkeleton";
 
-export default function MainFeed() {
+type Props = {
+  userId: string
+}
+
+export default function MainFeed({ userId }: Props) {
   const [posts, setPosts] = useState<TPost[] | null>(null)
   const [refresh, setRefresh] = useState(true)
 
@@ -19,7 +23,7 @@ export default function MainFeed() {
     if (refresh) fetchPosts()
   }, [refresh])
 
-  function handleNewPost() {
+  function refreshFeed() {
     setRefresh(true)
   }
   return (
@@ -58,11 +62,11 @@ export default function MainFeed() {
         p-4
       ">
         <div className="flex-none w-10 h-10 bg-slate-400 rounded-full"></div>
-        <ComposePost onPostSuccess={handleNewPost} />
+        <ComposePost onPostSuccess={refreshFeed} />
       </div>
       
       <Suspense fallback={<PostFeedSkeleton />}>
-        <PostFeed posts={posts} />
+        <PostFeed posts={posts} userId={userId} />
       </Suspense>
     </main>
   )

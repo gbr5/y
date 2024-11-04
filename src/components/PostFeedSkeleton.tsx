@@ -13,14 +13,13 @@ const ICONS = [
 
 export default function PostFeedSkeleton() {
   return (
-    <div
-      className="
-        flex
-        flex-col
-        min-w-full
-        min-h-full
-        "
-        >
+    <div className="
+      flex
+      flex-col
+      min-w-full
+      min-h-full
+      animate-pulse
+    ">
       {Array.from({ length: 5 }).map((_, index) => (
         <div key={index} className="
           flex
@@ -68,7 +67,7 @@ export default function PostFeedSkeleton() {
                   rounded-3xl
                   w-24
                   ml-2
-                  "/>
+                "/>
               </div>
               <div className="text-gray-500 "><BsThreeDots /></div>
             </div>
@@ -80,7 +79,7 @@ export default function PostFeedSkeleton() {
                 to-gray-800
                 min-h-6
                 rounded-3xl
-                w-92
+                w-full
                 mb-2
                 "/>
               ))}

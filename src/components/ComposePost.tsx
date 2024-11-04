@@ -34,9 +34,9 @@ export default function ComposePost({ onPostSuccess }: Props) {
   return (
     <form action={handleSubmitPost} className="flex flex-col w-full h-full relative">
       <Toaster className="
-          lg:my-12
-          shadow-2xl
-        " />
+        lg:my-12
+        shadow-2xl
+      "/>
       <input
         type="text"
         name="post"

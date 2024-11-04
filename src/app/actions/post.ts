@@ -109,6 +109,11 @@ type TProfile = {
   username: string
   full_name: string | null
 }
+export type TPostLike = {
+  id: string
+  user_id: string
+  profiles: TProfile | null
+}
 
 export type TPost = {
   id: string
@@ -117,9 +122,9 @@ export type TPost = {
   created_at: string
   updated_at: string
   profiles: TProfile | null
+  likes: TPostLike[] | null
 }
 
-// export async function getAllPosts() {
 export async function getAllPosts(): Promise<TPost[] | null> {
   try {
     const supabase = await createClient()
@@ -129,6 +134,14 @@ export async function getAllPosts(): Promise<TPost[] | null> {
       profiles (
         full_name,
         username
+      ),
+      likes(
+        id,
+        user_id,
+        profiles(
+          full_name,
+          username
+        )
       )
     `).order("updated_at", { ascending: false })
     if (error) {
@@ -139,7 +152,6 @@ export async function getAllPosts(): Promise<TPost[] | null> {
       console.log("No data returned while fetching posts - getAllPosts function: ", data)
       return null
     }
-
     return data
 
   } catch (error) {
@@ -183,5 +195,70 @@ export async function likePost(post_id: string): Promise<ServerResponse> {
       message: "An unexpected error occured when liking a post",
       errorCode: "UNKNOWN_ERROR"
     }
+  }
+}
+
+export async function dislikePost(post_id: string): Promise<ServerResponse> {
+  try {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase.auth.getUser()
+
+    if (!data || !data.user || error) await handleNoUser(data, error)
+
+    if (data && data.user) {
+      const response = await supabase.from("likes").delete().eq("tweet_id", post_id,).eq("user_id", data.user?.id)
+      if (response.error) {
+        console.log("Post like insertion error - likePost function: ", response.error)
+        return {
+          isSuccessful: false,
+          message: "An unexpected error occured",
+          errorCode: "UNKNOWN_ERROR"
+        }
+      }
+      return {
+        isSuccessful: true,
+        message: "dislike"
+      }
+    }
+    
+    return {
+      isSuccessful: false,
+      message: "An unexpected error occured when liking a post",
+      errorCode: "UNKNOWN_ERROR"
+    }
+  } catch (error) {
+    console.error("Unknown error - likePost function: ", error)
+
+    return {
+      isSuccessful: false,
+      message: "An unexpected error occured when liking a post",
+      errorCode: "UNKNOWN_ERROR"
+    }
+  }
+}
+
+export async function getPostLikes(post_id: string): Promise<TPostLike[]> {
+  try {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase.from("likes").select(`
+      *,
+      profiles(
+        full_name,
+        username
+      )
+    `).eq("tweet_id", post_id)
+    
+    if (data) {
+      return data
+    }
+
+    if (error) console.log(error)
+    return []
+
+  } catch (error) {
+    console.log(error)
+    return []
   }
 }

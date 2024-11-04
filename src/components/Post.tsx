@@ -1,17 +1,19 @@
-"use client"
 import { timePassed } from "@/utils/timePassed";
-import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
+import {  AiOutlineRetweet } from "react-icons/ai";
 import { BsChat, BsDot, BsThreeDots } from "react-icons/bs";
 import { IoShareOutline, IoStatsChart } from "react-icons/io5";
-import { likePost, TPost } from "@/app/actions/post";
-import { toast } from "sonner";
-
+import { TPost } from "@/app/actions/post";
+import PostLikeButton from "./PostLikeButton";
+import { Suspense } from "react";
+import PostLikeButtonSkeleton from "./PostLikeButtonSkeleton";
+// import { createClient } from "@/utils/supabase/server";
 
 type Props = {
   post: TPost
+  userId: string
 }
 
-export default function Post({ post }: Props) {
+export default async function Post({ post, userId }: Props) {
   const postTime = () => {
     if (post.created_at !== post.updated_at) {
       return `${timePassed(new Date(post.created_at))} edited ${timePassed(new Date(post.updated_at))}`
@@ -19,15 +21,10 @@ export default function Post({ post }: Props) {
     return timePassed(new Date(post.created_at))
   }
 
-  async function handleLikePost() {
-    const { isSuccessful, message } = await likePost(post.id)
-    if (!isSuccessful) return toast.error("Something went wrong, try again later")
-    if (message === "like") return toast.success(" ♥️ ")
-    return toast.success(" 💔 ")
-  }
   return (
     <div
       className="
+        relative
         flex
         w-full
         border-t-[0.5px]
@@ -60,9 +57,13 @@ export default function Post({ post }: Props) {
           <div className="rounded-full hover:bg-white/15 transition duration-200 p-3 cursor-pointer">
             <AiOutlineRetweet />
           </div>
-          <button onClick={handleLikePost} className="rounded-full hover:bg-white/15 transition duration-200 p-3 cursor-pointer">
-            <AiOutlineHeart />
-          </button>
+          <Suspense fallback={<PostLikeButtonSkeleton />}>
+            <PostLikeButton
+              initialLikes={post.likes ?? []}
+              post_id={post.id}
+              userId={userId}
+            />
+          </Suspense>
           <div className="rounded-full hover:bg-white/15 transition duration-200 p-3 cursor-pointer">
             <IoStatsChart />
           </div>
