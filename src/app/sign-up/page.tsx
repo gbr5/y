@@ -8,6 +8,8 @@ import { toast, Toaster } from 'sonner'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { validateEmail } from '@/utils/validateEmail'
+import Logo from '@/components/Logo'
+import Link from 'next/link'
 // import HCaptcha from '@hcaptcha/react-hcaptcha'
 
 export default function SignUpPage() {
@@ -124,11 +126,12 @@ export default function SignUpPage() {
       bg-black
       text-white
       flex
+      flex-col
       justify-center
       items-center
       w-screen
       h-screen
-    ">
+      ">
       <Toaster
         className="
           lg:absolute
@@ -139,6 +142,13 @@ export default function SignUpPage() {
         dir="ltr"
         position="top-right"
       />
+      <div className="mb-8">
+        <p className='text-white'>
+          Already have an account?{" "}
+          <Link className='text-blue-600' href="/login"> Sign In</Link>
+        </p>
+      </div>
+      <Logo />
       <form
         onSubmit={handleSubmit}
         className='flex flex-col space-y-8 max-w-[600px] w-[94vw]'

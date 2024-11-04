@@ -8,6 +8,8 @@ import { redirect } from 'next/navigation'
 import { toast, Toaster } from 'sonner'
 import { createClient } from '@/utils/supabase/client'
 import { validateEmail } from '@/utils/validateEmail'
+import Logo from '@/components/Logo'
+import Link from 'next/link'
 
 const errorCodes = [
   "invalid_credentials",
@@ -76,12 +78,20 @@ export default function LoginPage() {
       bg-black
       text-white
       flex
+      flex-col
       justify-center
       items-center
       w-screen
       h-screen
     ">
       <Toaster />
+      <div className="mb-8">
+        <p className='text-white'>
+          Don&apos;t have an account yet?{" "}
+          <Link className='text-blue-600' href="/sign-up"> Sign Up</Link>
+        </p>
+      </div>
+      <Logo />
       <form
         onSubmit={handleSubmit}
         className='flex flex-col space-y-8 max-w-[600px] w-[94vw]'
