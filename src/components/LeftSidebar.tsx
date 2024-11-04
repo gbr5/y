@@ -47,11 +47,10 @@ export default function LeftSidebar() {
       
       flex
       flex-col
-      max-w-14
-      lg:max-w-[275px]
+      w-14
+      lg:w-[275px]
       
       items-stretch
-      min-h-screen
       h-[100vh]
     ">
       <div className="flex flex-col items-stretch h-full space-y-4 my-4">

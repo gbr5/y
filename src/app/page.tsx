@@ -15,14 +15,21 @@ export default async function Home() {
   //   redirect('/login')
   // }
   return (
-    <div className="w-full h-full text-white flex justify-center items-center relative bg-black">
-      {/* <AuthModel /> */}
+    <div className="
+      max-w-full
+      h-full
+      text-white
+      overflow-hidden
+      flex
+      justify-center
+      items-center
+      relative
+      bg-black
+    ">
       <div className="max-w-screen-xl w-full h-full flex ">
-        {/* Left sidebar for page navigation */}
         <LeftSidebar />
         <MainFeed userId={(data && data.user) ? data.user.id : ""} />
         <RightSidebar />
-
       </div>
     </div>
   )

@@ -10,7 +10,7 @@ type Props = {
 
 export default async function PostFeed({ posts, userId }: Props) {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-auto">
       {!posts && (
         <div className="flex flex-col w-full h-full items-center">
           <LoaderIcon className="my-4 animate-spin" />

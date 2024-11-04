@@ -27,20 +27,16 @@ export default function MainFeed({ userId }: Props) {
     setRefresh(true)
   }
   return (
-    // min-w-[100vw]
-    // max-w-[100vw]
-    // lg:max-w-[600px]
-    // lg:min-w-[600px]
+    // h-full
+    // w-auto
     <main className="
+      md:w-[600px]
+      lg:w-[600px]
       flex
+      flex-1
+      w-auto
       flex-col
       mx-auto
-      h-full
-      w-fit
-      md:max-w-[600px]
-      md:min-w-[600px]
-      lg:max-w-[600px]
-      lg:min-w-[600px]
       border-r-[0.5px]
       border-l-[0.5px]
       border-gray-600

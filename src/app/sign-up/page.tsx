@@ -131,6 +131,7 @@ export default function SignUpPage() {
       items-center
       w-screen
       h-full
+      my-8
       ">
       <Toaster
         className="
