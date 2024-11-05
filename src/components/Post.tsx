@@ -1,19 +1,20 @@
 import { timePassed } from "@/utils/timePassed";
 import {  AiOutlineRetweet } from "react-icons/ai";
-import { BsChat, BsDot, BsThreeDots } from "react-icons/bs";
+import { BsChat, BsDot } from "react-icons/bs";
 import { IoShareOutline, IoStatsChart } from "react-icons/io5";
-import { TPost } from "@/app/actions/post";
 import PostLikeButton from "./PostLikeButton";
 import { Suspense } from "react";
 import PostLikeButtonSkeleton from "./PostLikeButtonSkeleton";
-// import { createClient } from "@/utils/supabase/server";
+import { TPost } from "@/dtos/Post";
+import PostSettingsButton from "./PostSettingsButton";
 
 type Props = {
   post: TPost
   userId: string
+  refreshFeed: () => void
 }
 
-export default async function Post({ post, userId }: Props) {
+export default async function Post({ post, userId, refreshFeed }: Props) {
   const postTime = () => {
     if (post.created_at !== post.updated_at) {
       return `${timePassed(new Date(post.created_at))} edited ${timePassed(new Date(post.updated_at))}`
@@ -43,7 +44,7 @@ export default async function Post({ post, userId }: Props) {
             <div className="text-gray-500"><BsDot /></div>
             <div className="text-gray-500">{postTime()}</div>
           </div>
-          <div className="text-gray-500 "><BsThreeDots /></div>
+          <PostSettingsButton refreshFeed={refreshFeed} post={post} userId={userId} />
         </div>
 
         <p className="text-sm text-white leading-5 my-4">{post.text}</p>

@@ -6,9 +6,10 @@ import { redirect } from "next/navigation"
 
 type Props = {
   onPostSuccess: () => void
+  isPending: boolean
 }
 
-export default function ComposePost({ onPostSuccess }: Props) {
+export default function ComposePost({ onPostSuccess, isPending }: Props) {
   const [errorMessage, setErrorMessage] = useState("")
 
   async function handleSubmitPost(formData: FormData) {
@@ -17,7 +18,7 @@ export default function ComposePost({ onPostSuccess }: Props) {
       const { isSuccessful, message, errorCode } = await submitPost(formData)
 
       if (!isSuccessful) {
-        if (errorCode === "validation_error") {
+        if (errorCode === "VALIDATION_ERROR") {
           toast.error(message)
           setErrorMessage(message)
           return 
@@ -58,6 +59,7 @@ export default function ComposePost({ onPostSuccess }: Props) {
         <div className="flex"></div>
         <div className="w-full max-w-[100px]">
           <button
+            disabled={isPending}
             type="submit"
             className="
               rounded-full

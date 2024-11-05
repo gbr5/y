@@ -1,4 +1,4 @@
-import { TPost } from "@/app/actions/post";
+import { TPost } from "@/dtos/Post";
 import Post from "./Post";
 import PostFeedSkeleton from "./PostFeedSkeleton";
 import { LoaderIcon } from "lucide-react";
@@ -6,9 +6,10 @@ import { LoaderIcon } from "lucide-react";
 type Props = {
   posts: TPost[] | null
   userId: string
+  refreshFeed: () => void
 }
 
-export default async function PostFeed({ posts, userId }: Props) {
+export default async function PostFeed({ posts, userId, refreshFeed }: Props) {
   return (
     <div className="flex flex-col w-auto">
       {!posts && (
@@ -18,7 +19,7 @@ export default async function PostFeed({ posts, userId }: Props) {
         </div>
       )}
       {posts && posts.map((item, index) => (
-        <Post key={index} post={item} userId={userId} />
+        <Post refreshFeed={refreshFeed} key={index} post={item} userId={userId} />
       ))}
     </div>
   )

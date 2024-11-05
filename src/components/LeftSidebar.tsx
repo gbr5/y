@@ -51,7 +51,7 @@ export default function LeftSidebar() {
       lg:w-[275px]
       
       items-stretch
-      h-[100vh]
+      max-h-screen
     ">
       <div className="flex flex-col items-stretch h-full space-y-4 my-4">
         {NAVIGATION_ITEMS.map((item, index) => (
@@ -146,5 +146,3 @@ export default function LeftSidebar() {
     </section>
   )
 }
-
-// Parei no minuto 1:38:30

@@ -1,6 +1,7 @@
 "use client"
 
-import { dislikePost, getPostLikes, likePost, TPostLike } from "@/app/actions/post"
+import { dislikePost, getPostLikes, likePost } from "@/app/actions/post"
+import { TPostLike } from "@/dtos/PostLike"
 import { useOptimistic, useTransition, useState, useMemo } from "react"
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai"
 import { toast } from "sonner"
@@ -18,12 +19,6 @@ export default function PostLikeButton({ initialLikes, post_id, userId }: Props)
     return likes.some(like => like.user_id === userId)
   }, [likes, userId])
   const [userLikedPost, setUserLikedPost] = useState(initialUserLikedPost)
-  // useEffect(() => {
-    //   console.log("changing userLikedPostState")
-    //   if (userId) {
-      //     setUserLikedPost(likes.some(like => like.user_id === userId))      
-      //   }
-      // }, [likes, userId])
 
   const [optimisticLikes, updateOptimisticLikes] = useOptimistic(
     { totalLikes: likes.length, userLikedPost: userLikedPost },
@@ -33,7 +28,6 @@ export default function PostLikeButton({ initialLikes, post_id, userId }: Props)
     })
   )
 
-// togglePostLike - change the below function so as to call either like or dislikePost
   function togglePostLike() {
     console.log({
       userLikedPost,
@@ -73,7 +67,7 @@ export default function PostLikeButton({ initialLikes, post_id, userId }: Props)
       }
       getPostLikes(post_id).then((response) => {
         console.log(response)
-        setLikes(response)
+        if (response.data) setLikes(response.data)
       })
     })
   }
