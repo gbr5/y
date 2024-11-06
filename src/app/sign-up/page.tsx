@@ -130,8 +130,9 @@ export default function SignUpPage() {
       justify-center
       items-center
       w-screen
+      min-h-screen
       h-full
-      my-8
+      py-8
       ">
       <Toaster
         className="
