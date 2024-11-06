@@ -17,7 +17,6 @@ export default function PostSettingsButton({ post, userId, refreshFeed }: Props)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent | TouchEvent) {
-      console.log("I'm here")
       if (popUpRef.current && !popUpRef.current.contains(event.target as Node)){
         setIsSettingsPopUpOpen(false)
       }

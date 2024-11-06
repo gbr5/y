@@ -306,3 +306,52 @@ export async function deletePost(postId: string): Promise<ServerResponse<void>> 
     }
   }
 }
+
+export async function submitPostReply(formData: FormData): Promise<ServerResponse<string | void>> {
+  const validation = await validatePost(formData)
+  if (!validation.isSuccessful) return validation;
+
+  try {
+    const user = await validateUser()
+    const postId = formData.get("postId")
+
+    if (postId) {
+      const postValidation = await getPost(postId.toString())
+      if (!postValidation.isSuccessful) {
+        return {
+          isSuccessful: postValidation.isSuccessful,
+          message: postValidation.message,
+          errorCode: postValidation.errorCode
+        }
+      }
+    } else {
+      return {
+        isSuccessful: false,
+        message: "Post not found",
+        errorCode: ErrorCode.NOT_FOUND
+      }
+    }
+
+    const supabase = await createClient()
+
+    if (validation.data) {
+      const { error } = await supabase.from("replies").insert({
+        id: randomUUID(),
+        user_id: user.id,
+        text: validation.data ?? "",
+      });
+      if (error) return handleDatabaseError(error, "submitPostReply");
+    }
+    return {
+      isSuccessful: true,
+      message: "Success, your post reply is now live 🚀"
+    };
+  } catch (error) {
+    console.error("Unknown error in submitPostReply:", error);
+    return {
+      isSuccessful: false,
+      message: "An unexpected error occurred when submitting a post reply",
+      errorCode: ErrorCode.UNKNOWN_ERROR
+    };
+  }
+}

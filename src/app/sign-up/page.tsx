@@ -133,7 +133,7 @@ export default function SignUpPage() {
       min-h-screen
       h-full
       py-8
-      ">
+    ">
       <Toaster
         className="
           lg:absolute
