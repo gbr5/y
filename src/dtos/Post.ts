@@ -8,7 +8,7 @@ export type TPost = {
   author_id: string
   created_at: string
   updated_at: string
-  profiles: TProfile | null
-  likes: TPostLike[] | null
+  profiles?: TProfile | null
+  likes?: TPostLike[] | null
   replies?: TPostReply[] | null
 }

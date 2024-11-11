@@ -5,6 +5,6 @@ export type TPostReply = {
   user_id: string
   tweet_id: string
   text: string
-  profiles: TProfile | null
+  profiles?: TProfile | null
   // replies: TPostReply[] | null
 }

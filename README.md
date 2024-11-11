@@ -31,5 +31,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Generate Supabase's database types for typescript
 
-npx supabase gen types --lang=typescript --project-id zcxtooyicyatuoxixwuk --schema public > database.types.ts
-
+npx supabase gen types --lang=typescript --project-id "projectId" --schema public > database.types.ts
