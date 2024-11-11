@@ -23,7 +23,9 @@ export async function GET(request: NextRequest) {
       redirect(next)
     }
     // error 403: Emaill link is invalid or has expired
-    // console.log("confirm error: ", error)
+    // console.error("confirm error: ", error)
+    
+    // This isn't been applied as the confirmation e-mail is not enabled on supabase
     if (error.code === "otp_expired") {
       // send user a new otp to user e-mail
       // send user to login page with params - otp expired

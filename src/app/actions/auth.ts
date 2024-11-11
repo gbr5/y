@@ -36,7 +36,7 @@ export async function login(formData: FormData): Promise<AuthResponse> {
     const { error } = await supabase.auth.signInWithPassword(data)
   
     if (error) {
-      console.log("error: ", error)
+      console.error("error: ", error)
       if (error.code === "invalid_credentials") {
         return {
           isSuccessful: false,
@@ -127,7 +127,7 @@ export async function signup(formData: FormData): Promise<AuthResponse> {
       const { error } = await supabase.auth.signUp(data)
       
       if (error) {
-        console.log("error: ", error)
+        console.error("error: ", error)
         if (error.code === "user_already_exists") {
           return {
             isSuccessful: false,
@@ -171,7 +171,7 @@ export async function signOut() {
   const supabase = await createClient()
   const { error } = await supabase.auth.signOut()
   if (error) {
-    console.log(error)
+    console.error(error)
     redirect('/error')
   }
   redirect('/')
@@ -181,7 +181,7 @@ export async function checkIsUsernameUnique(username: string): Promise<boolean> 
   const supabase = await createClient()
   const { data, error } = await supabase.from("profiles").select().eq('username', username)
   if (error) {
-    console.log(error)
+    console.error(error)
     redirect('/error')
   }
   if (data[0] && data[0].id) {

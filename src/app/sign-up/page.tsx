@@ -40,14 +40,9 @@ export default function SignUpPage() {
           redirect('/')
         }, 6000)
       }
-      console.log(error)
+      console.error(error)
     })
   }, [supabase.auth])
-
-  // 4. if error chanhe input border color
-
-  // https://chatgpt.com/c/67212351-d610-8011-b8b4-76144dd51c53 yup implementation
-  // https://v0.dev/chat/H9EM2MxbJnv handle form useFormStatus from react-dom
 
   async function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setIsLoading(true)
@@ -57,7 +52,7 @@ export default function SignUpPage() {
     setUsernameError('')
     setServerError('')
 
-    // Check if there username is unique
+    // Check if the username is unique
     const uniqueUsername = await checkIsUsernameUnique(sanitizedUsername)
 
     // raise error 

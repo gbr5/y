@@ -1,7 +1,7 @@
 "use client"
 import { timePassed } from "@/utils/timePassed";
-import {  AiOutlineRetweet } from "react-icons/ai";
-import { BsChat, BsDot } from "react-icons/bs";
+import { AiOutlineRetweet } from "react-icons/ai";
+import { BsDot } from "react-icons/bs";
 import { IoShareOutline, IoStatsChart } from "react-icons/io5";
 import PostLikeButton from "./PostLikeButton";
 import { Suspense, useState } from "react";
@@ -9,6 +9,7 @@ import PostLikeButtonSkeleton from "./PostLikeButtonSkeleton";
 import { TPost } from "@/dtos/Post";
 import PostSettingsButton from "./PostSettingsButton";
 import ReplyPostPopUp from "./ReplyPostPopUp";
+import PostRepliesButton from "./PostRepliesButton";
 
 type Props = {
   post: TPost
@@ -27,6 +28,7 @@ export default function Post({ post, userId, refreshFeed }: Props) {
   function toggleReplyPost() {
     setIsReplyPostOpen(!isReplyPostOpen)
   }
+
   return (
     <>
       {isReplyPostOpen && (
@@ -65,9 +67,11 @@ export default function Post({ post, userId, refreshFeed }: Props) {
           <div className="bg-slate-400 aspect-square w-full h-fit md:h-96 rounded-xl" />
 
           <div className="flex items-center space-x-2 w-full justify-between mt-2">
-            <button onClick={toggleReplyPost} className="rounded-full hover:bg-white/15 transition duration-200 p-3 cursor-pointer">
-              <BsChat />
-            </button>
+            <PostRepliesButton
+              toggleReplyPost={toggleReplyPost}
+              postId={post.id}
+              replies={post.replies ?? []}
+            />
             <div className="rounded-full hover:bg-white/15 transition duration-200 p-3 cursor-pointer">
               <AiOutlineRetweet />
             </div>

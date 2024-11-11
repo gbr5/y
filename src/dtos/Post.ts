@@ -1,4 +1,5 @@
 import { TPostLike } from "./PostLike"
+import { TPostReply } from "./PostReply"
 import { TProfile } from "./Profile"
 
 export type TPost = {
@@ -9,4 +10,5 @@ export type TPost = {
   updated_at: string
   profiles: TProfile | null
   likes: TPostLike[] | null
+  replies?: TPostReply[] | null
 }

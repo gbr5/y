@@ -16,7 +16,7 @@ export default function AuthModel() {
     supabase.auth.getUser().then(({ data, error }) => {
       if (error || !data?.user) {
         // redirect('/login')
-        console.log(error)
+        console.error(error)
         return setIsOpen(true)
       }
     })

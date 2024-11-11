@@ -66,7 +66,6 @@ export default function PostLikeButton({ initialLikes, post_id, userId }: Props)
         })
       }
       getPostLikes(post_id).then((response) => {
-        console.log(response)
         if (response.data) setLikes(response.data)
       })
     })
@@ -76,7 +75,17 @@ export default function PostLikeButton({ initialLikes, post_id, userId }: Props)
     <button
       disabled={isePending}
       onClick={togglePostLike}
-      className="flex items-center gap-2 rounded-full hover:bg-white/15 transition duration-200 p-3 cursor-pointer"
+      className="
+        flex
+        items-center
+        gap-2
+        rounded-full
+        hover:bg-white/15
+        transition
+        duration-200
+        p-3
+        cursor-pointer
+      "
     >
       {optimisticLikes.userLikedPost ? (
         <AiFillHeart className="text-red-500" />

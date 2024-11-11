@@ -16,8 +16,9 @@ type Props = {
 }
 
 export default function ReplyPostPopUp({ post, closeComponent, onPostSuccess }: Props) {
-  const replyComponentRef = useRef<HTMLDivElement>(null)
+  const [isPending, setIsPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState("")
+  const replyComponentRef = useRef<HTMLDivElement>(null)
 
   const postTime = () => {
     if (post.created_at !== post.updated_at) {
@@ -42,6 +43,7 @@ export default function ReplyPostPopUp({ post, closeComponent, onPostSuccess }: 
   }, [closeComponent])
 
   async function handleSubmit(formData: FormData) {
+    setIsPending(true)
     setErrorMessage("")
     try {
       formData.append("postId", post.id)
@@ -58,6 +60,7 @@ export default function ReplyPostPopUp({ post, closeComponent, onPostSuccess }: 
       }
       toast.success(message)
       onPostSuccess()
+      setIsPending(false)
       closeComponent()
     } catch {
       redirect("/error")
@@ -145,7 +148,13 @@ export default function ReplyPostPopUp({ post, closeComponent, onPostSuccess }: 
               <button className="text-yprimary"><GrSchedule /></button>
               <button className="text-yprimary"><IoLocationOutline /></button>
             </div>
-            <button type="submit" className="rounded-full bg-yprimary py-2 px-4">Reply</button>
+            <button
+              disabled={isPending}
+              type="submit"
+              className="rounded-full bg-yprimary py-2 px-4"
+            >
+              Reply
+            </button>
           </div>
         </form>
       </div>

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { signOut } from "./auth";
 import { TPost } from "@/dtos/Post";
 import { TPostLike } from "@/dtos/PostLike";
+import { TPostReply } from "@/dtos/PostReply";
 
 enum ErrorCode {
   VALIDATION_ERROR = "VALIDATION_ERROR",
@@ -49,7 +50,7 @@ async function handleDatabaseError(error: unknown, functionName: string): Promis
     isSuccessful: false,
     message: "An unexpected database error occurred",
     errorCode: ErrorCode.INTERNAL_SERVER_ERROR
-  };
+  }
 }
 
 // Main functions
@@ -60,7 +61,7 @@ export async function validatePost(formData: FormData): Promise<ServerResponse<s
       isSuccessful: true,
       message: "Post validated successfully",
       data: post
-    };
+    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       const fieldError = error.flatten().fieldErrors.post?.[0];
@@ -68,14 +69,14 @@ export async function validatePost(formData: FormData): Promise<ServerResponse<s
         isSuccessful: false,
         message: fieldError || "Invalid post data",
         errorCode: ErrorCode.VALIDATION_ERROR
-      };
+      }
     }
     console.error("Validate Post error:", error);
     return {
       isSuccessful: false,
       message: "An unexpected error occurred during validation",
       errorCode: ErrorCode.UNKNOWN_ERROR
-    };
+    }
   }
 }
 
@@ -99,14 +100,14 @@ export async function submitPost(formData: FormData): Promise<ServerResponse<str
     return {
       isSuccessful: true,
       message: "Success, your post is now live 🚀"
-    };
+    }
   } catch (error) {
     console.error("Unknown error in submitPost:", error);
     return {
       isSuccessful: false,
       message: "An unexpected error occurred when submitting post",
       errorCode: ErrorCode.UNKNOWN_ERROR
-    };
+    }
   }
 }
 
@@ -119,7 +120,11 @@ export async function getAllPosts(): Promise<ServerResponse<TPost[] | void>> {
       .select(`
         *,
         profiles (full_name, username),
-        likes (id, user_id, profiles (full_name, username))
+        likes (id, user_id, profiles (full_name, username)),
+        replies!replies_tweet_id_fkey (
+          *,
+          user:profiles (username)
+        )
       `)
       .order("updated_at", { ascending: false });
 
@@ -128,15 +133,15 @@ export async function getAllPosts(): Promise<ServerResponse<TPost[] | void>> {
     return {
       isSuccessful: true,
       message: "Posts fetched successfully",
-      data: data
-    };
+      data
+    }
   } catch (error) {
     console.error("Unknown error in getAllPosts:", error);
     return {
       isSuccessful: false,
       message: "An unexpected error occurred when fetching posts",
       errorCode: ErrorCode.UNKNOWN_ERROR
-    };
+    }
   }
 }
 
@@ -234,7 +239,11 @@ export async function getPost(postId: string): Promise<ServerResponse<TPost | vo
       .select(`
         *,
         profiles (full_name, username),
-        likes (id, user_id, profiles (full_name, username))
+        likes (id, user_id, profiles (full_name, username)),
+        replies!replies_tweet_id_fkey (
+          *,
+          user:profiles (username)
+        )
       `)
       .eq('id', postId)
       .single()
@@ -339,19 +348,50 @@ export async function submitPostReply(formData: FormData): Promise<ServerRespons
         id: randomUUID(),
         user_id: user.id,
         text: validation.data ?? "",
+        tweet_id: postId
       });
       if (error) return handleDatabaseError(error, "submitPostReply");
     }
     return {
       isSuccessful: true,
       message: "Success, your post reply is now live 🚀"
-    };
+    }
   } catch (error) {
     console.error("Unknown error in submitPostReply:", error);
     return {
       isSuccessful: false,
       message: "An unexpected error occurred when submitting a post reply",
       errorCode: ErrorCode.UNKNOWN_ERROR
-    };
+    }
+  }
+}
+
+export async function getPostReplies(postId: string): Promise<ServerResponse<TPostReply[] | void>> {
+  try {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase
+      .from("replies")
+      .select(`
+        *,
+        profiles (full_name, username)
+      `)
+      .eq("tweet_id", postId)
+    
+    if (error) return handleDatabaseError(error, "getPostReplies")
+    
+    return {
+      isSuccessful: true,
+      message: "Post replies fetched successfully",
+      data
+    }
+
+  } catch (error) {
+    console.error("Unknown error in getPostReplies:", error);
+    return {
+      isSuccessful: false,
+      message: "An unexpected error occurred when fetching post replies",
+      errorCode: ErrorCode.UNKNOWN_ERROR
+    }
   }
 }
