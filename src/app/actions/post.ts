@@ -318,7 +318,7 @@ export async function deletePost(postId: string): Promise<ServerResponse<void>> 
 
 export async function submitPostReply(formData: FormData): Promise<ServerResponse<string | void>> {
   const validation = await validatePost(formData)
-  if (!validation.isSuccessful) return validation;
+  if (!validation.isSuccessful || !validation.data) return validation;
 
   try {
     const user = await validateUser()
@@ -343,12 +343,14 @@ export async function submitPostReply(formData: FormData): Promise<ServerRespons
 
     const supabase = await createClient()
 
-    if (validation.data) {
+    if (validation.data && postId) {
+      const text = typeof validation.data === "string" ? validation.data : String(validation.data)
+      const tweet_id = typeof postId === "string" ? postId : String(postId)
       const { error } = await supabase.from("replies").insert({
         id: randomUUID(),
         user_id: user.id,
-        text: validation.data ?? "",
-        tweet_id: postId
+        text,
+        tweet_id,
       });
       if (error) return handleDatabaseError(error, "submitPostReply");
     }

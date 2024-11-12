@@ -3,7 +3,7 @@ import { TPost } from "@/dtos/Post"
 import { timePassed } from "@/utils/timePassed"
 import { GiftIcon, ImageIcon, List, X } from "lucide-react"
 import { redirect } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useTransition } from "react"
 import { BsDot } from "react-icons/bs"
 import { GrSchedule } from "react-icons/gr"
 import { IoHappyOutline, IoLocationOutline } from "react-icons/io5"
@@ -16,7 +16,7 @@ type Props = {
 }
 
 export default function ReplyPostPopUp({ post, closeComponent, onPostSuccess }: Props) {
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition()
   const [errorMessage, setErrorMessage] = useState("")
   const replyComponentRef = useRef<HTMLDivElement>(null)
 
@@ -43,28 +43,29 @@ export default function ReplyPostPopUp({ post, closeComponent, onPostSuccess }: 
   }, [closeComponent])
 
   async function handleSubmit(formData: FormData) {
-    setIsPending(true)
-    setErrorMessage("")
-    try {
-      formData.append("postId", post.id)
-      const { isSuccessful, message, errorCode } = await submitPostReply(formData)
-
-      if (!isSuccessful) {
-        if (errorCode === "VALIDATION_ERROR") {
-          toast.error(message)
-          setErrorMessage(message)
-          return 
+    if (isPending) return
+    startTransition(async () => {
+      setErrorMessage("")
+      try {
+        formData.append("postId", post.id)
+        const { isSuccessful, message, errorCode } = await submitPostReply(formData)
+  
+        if (!isSuccessful) {
+          if (errorCode === "VALIDATION_ERROR") {
+            toast.error(message)
+            setErrorMessage(message)
+            return 
+          }
+          // improve error handling
+          redirect("/error")
         }
-        // improve error handling
+        toast.success(message)
+        onPostSuccess()
+        closeComponent()
+      } catch {
         redirect("/error")
       }
-      toast.success(message)
-      onPostSuccess()
-      setIsPending(false)
-      closeComponent()
-    } catch {
-      redirect("/error")
-    }
+    })
   }
 
   return (
@@ -141,19 +142,19 @@ export default function ReplyPostPopUp({ post, closeComponent, onPostSuccess }: 
           </div>
           <div className="flex justify-between">
             <div className="flex space-x-2">
-              <button className="text-yprimary"><ImageIcon /></button>
-              <button className="text-yprimary"><GiftIcon /></button>
-              <button className="text-yprimary"><List /></button>
-              <button className="text-yprimary"><IoHappyOutline /></button>
-              <button className="text-yprimary"><GrSchedule /></button>
-              <button className="text-yprimary"><IoLocationOutline /></button>
+              <button type="button" className="text-yprimary"><ImageIcon /></button>
+              <button type="button" className="text-yprimary"><GiftIcon /></button>
+              <button type="button" className="text-yprimary"><List /></button>
+              <button type="button" className="text-yprimary"><IoHappyOutline /></button>
+              <button type="button" className="text-yprimary"><GrSchedule /></button>
+              <button type="button" className="text-yprimary"><IoLocationOutline /></button>
             </div>
             <button
               disabled={isPending}
               type="submit"
               className="rounded-full bg-yprimary py-2 px-4"
             >
-              Reply
+              {isPending ? 'Replying...' : 'Reply'}
             </button>
           </div>
         </form>
