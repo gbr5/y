@@ -9,7 +9,7 @@ export default function RightSidebar() {
             id="searchBox"
             type="text"
             name=""
-            placeholder="Search X"
+            placeholder="Search Y"
             className="
               outline-none
               bg-neutral-900/90

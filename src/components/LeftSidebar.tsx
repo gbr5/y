@@ -1,18 +1,15 @@
 import Link from "next/link"
 
 import { BiHomeCircle, BiUser } from "react-icons/bi"
-import { BsBell, BsBookmark, BsThreeDots, BsTwitter } from "react-icons/bs"
+import { BsBell, BsBookmark, BsThreeDots } from "react-icons/bs"
 import { FaFeatherPointed } from "react-icons/fa6"
 import { HiOutlineHashtag } from "react-icons/hi"
 import { HiOutlineEnvelope } from "react-icons/hi2"
 
 import { signOut } from "@/app/actions/auth"
+import Image from "next/image"
 
 const NAVIGATION_ITEMS = [
-  {
-    title: "Twitter",
-    icon: BsTwitter
-  },
   {
     title: "Home",
     icon: BiHomeCircle
@@ -54,6 +51,34 @@ export default function LeftSidebar() {
       max-h-screen
     ">
       <div className="flex flex-col items-stretch h-full space-y-4 my-4">
+          <Link
+            href="/"
+            className={`
+              transition
+              duration-200
+              rounded-3xl
+
+              pl-1
+              pr-4
+              flex
+              items-center
+              justify-center
+              lg:justify-start
+              min-w-full
+              w-fit
+              space-x-2
+              text-2xl
+            `}
+          >
+            <div className="hover:bg-white/10 rounded-full px-[6px] py-2">
+              <Image
+                src="/y_logo.png"
+                alt="logo"
+                width={30}
+                height={30}
+              />
+            </div>
+          </Link>
         {NAVIGATION_ITEMS.map((item, index) => (
           <Link
             key={index}
